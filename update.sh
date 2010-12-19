@@ -45,7 +45,7 @@ cd ..
 
 function post_update {
 	echo "Update complete, please run sql updates manually, from $TEMPDIR/sql/mysql,  e.g."
-	echo "$ mysql -u root -p --database tinypmdb < update_from_2.5_to_$TINYPMVERSION.sql
+	echo "$ mysql -u root -p --database tinypmdb < update_from_2.5_to_$TINYPMVERSION.sql"
 	echo "Update files are in $TEMPDIR"
 }
 
