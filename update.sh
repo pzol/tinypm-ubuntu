@@ -1,5 +1,5 @@
 #! /bin/sh
-TINYPMVERSION=2.5
+TINYPMVERSION=2.5.1
 
 # from /etc/init.d/tomcat6
 NAME=tomcat6
@@ -10,21 +10,50 @@ CATALINA_BASE=/var/lib/$NAME
 
 TINYPMFILE=tinypm-$TINYPMVERSION-tomcat6.0.zip
 
-if [ ! -e $TINYPMFILE ]; then
-	wget http://www.tinypm.com/downloads/$TINYPMFILE
-fi
+TEMPDIR=`cd $(mktemp -d tinypm-$TINYPMVERSION-UPDATE-XXXXX) && pwd`
+chmod 775 -R $TEMPDIR
+cd $TEMPDIR
 
-unzip -o tinypm-$TINYPMVERSION-tomcat6.0.zip
+function download {
+	if [ ! -e $TINYPMFILE ]; then
+		wget http://www.tinypm.com/downloads/$TINYPMFILE
+	fi
+	unzip -o tinypm-$TINYPMVERSION-tomcat6.0.zip
+}
 
-#backup settings
-cp $CATALINA_BASE/webapps/tinypm/WEB-INF/classes/hibernate.properties .
+function backup {
+	cp $CATALINA_BASE/webapps/tinypm/WEB-INF/classes/hibernate.properties .
+	../backup.sh
+}
 
-/etc/init.d/tomcat6 stop
+function stop_tomcat {
+	/etc/init.d/tomcat6 stop
+}
 
+function start_tomcat {
+	/etc/init.d/tomcat6 start
+}
+
+
+function copy_files {
 cp dependencies/* $CATALINA_HOME/lib/
 rm -rf $CATALINA_BASE/webapps/tinypm
 unzip tinypm.war -d $CATALINA_BASE/webapps/tinypm/
-
 cp hibernate.properties $CATALINA_BASE/webapps/tinypm/WEB-INF/classes/
+cd ..
+}
 
-/etc/init.d/tomcat6 start
+function post_update {
+	echo "Update complete, please run sql updates manually, from $TEMPDIR/sql/mysql,  e.g."
+	echo "$ mysql -u root -p --database tinypmdb < update_from_2.5_to_$TINYPMVERSION.sql
+	echo "Update files are in $TEMPDIR"
+}
+
+function run {
+download &&
+stop_tomcat &&
+backup &&
+copy_files &&
+start_tomcat &&
+post_update
+}
