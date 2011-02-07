@@ -31,8 +31,8 @@ CREATE DATABASE tinypmdb CHARACTER SET = 'utf8' COLLATE = 'utf8_general_ci';
 GRANT SELECT, UPDATE, INSERT, DELETE ON tinypmdb.* TO 'username'@'localhost' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 \u tinypmdb
-\. sql/mysql/create_schema-2.5.1.sql
-\. sql/mysql/create_data-2.5.1.sql
+\. sql/mysql/create_schema-$TINYPMVERSION.sql
+\. sql/mysql/create_data-$TINYPMVERSION.sql
 EOF
 
 # enter your mysql root password here
