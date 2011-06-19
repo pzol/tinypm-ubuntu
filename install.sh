@@ -51,8 +51,8 @@ ln -s ../../java/mysql-connector-java.jar  mysql-connector-java.jar
 
 function post_install {
 echo "edit $CATALINA_HOME/webapps/tinypm/WEB-INF/classes/hibernate.properties and enter your mysql login and password"
-echo "then sudo /etc/init.d/tocat6 start"
-echo "point your browser to http://ocalhost:8080/tinypm/"
+echo "then sudo /etc/init.d/tomcat6 start"
+echo "point your browser to http://localhost:8080/tinypm/"
 echo "installation files are left for inspection in $TEMPDIR"
 }
 
